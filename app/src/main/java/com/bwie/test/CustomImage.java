@@ -1,0 +1,67 @@
+package com.bwie.test;
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.util.AttributeSet;
+import android.widget.ImageView;
+
+/**
+ * 1. 类的用途
+ * 2. @author dell
+ * 3. @date 2017/2/28 18:54
+ */
+
+public class CustomImage extends ImageView {
+
+    private Paint paint;
+    private int progress;
+    private boolean isVisiable = true;
+    private Rect rect;
+
+    public CustomImage(Context context) {
+        super(context);
+    }
+
+    public CustomImage(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initPaint();
+    }
+
+    private void initPaint() {
+        paint = new Paint();
+
+        paint.setColor(Color.RED);
+        paint.setStrokeWidth(10);
+        paint.setAntiAlias(true);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        canvas.save();
+        canvas.translate(0,0);
+
+        paint.setColor(Color.parseColor("#70000000"));
+        canvas.drawRect(0, 0, getWidth(), getHeight() - getHeight() * progress / 100, paint);
+        paint.setColor(Color.RED);
+
+        paint.setTextSize(50);
+        if (progress < 100) {
+            rect = new Rect();
+            paint.getTextBounds("00%", 0, "00%".length(), rect);
+            canvas.drawText(progress + "%", getWidth() / 2- (rect.width()/2), getHeight() / 2, paint);
+        } else {
+            canvas.drawText("", getWidth() / 2, getHeight() / 2, paint);
+        }
+        canvas.restore();
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+        postInvalidate();
+
+    }
+}
